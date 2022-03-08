@@ -2,14 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\EvilChannelsRepository;
+use App\Repository\CelebrityRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=EvilChannelsRepository::class)
+ * @ORM\Entity(repositoryClass=CelebrityRepository::class)
  */
-class EvilChannels extends AbstractEntity
+class Celebrity extends AbstractEntity
 {
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private string $title;
+
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -21,9 +26,20 @@ class EvilChannels extends AbstractEntity
     private string $link;
 
     /**
-     * @ORM\Column(type="text")
+     * @return string
      */
-    private string $reason;
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
 
     /**
      * @return string
@@ -55,21 +71,5 @@ class EvilChannels extends AbstractEntity
     public function setLink(string $link): void
     {
         $this->link = $link;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReason(): string
-    {
-        return $this->reason;
-    }
-
-    /**
-     * @param string $reason
-     */
-    public function setReason(string $reason): void
-    {
-        $this->reason = $reason;
     }
 }
