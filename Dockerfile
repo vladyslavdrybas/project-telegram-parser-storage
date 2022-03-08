@@ -2,7 +2,6 @@
 # https://docs.docker.com/compose/compose-file/#target
 
 ARG PHP_VERSION=8.0
-ARG NODE_VERSION=14.0
 ARG NGINX_VERSION=1.21
 
 FROM php:${PHP_VERSION}-fpm-alpine AS app_php
@@ -77,43 +76,11 @@ COPY translations translations/
 
 RUN composer dump-autoload --optimize
 
-COPY ./cron.sh /usr/local/bin/cron
-RUN chmod +x /usr/local/bin/cron
-
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
 ENTRYPOINT ["docker-entrypoint"]
 CMD ["php-fpm"]
-
-FROM node:${NODE_VERSION}-alpine AS app_nodejs
-
-ARG NODE_ENV=dev
-
-WORKDIR /srv/app
-
-RUN set -eux; \
-	apk add --no-cache --virtual .build-deps \
-		g++ \
-		gcc \
-		git \
-		make \
-		python \
-	;
-
-# prevent the reinstallation of vendors at every changes in the source code
-COPY package.json ./
-COPY yarn.lock ./
-
-RUN set -eux; \
-	yarn install; \
-	yarn cache clean
-
-COPY docker/nodejs/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-RUN chmod +x /usr/local/bin/docker-entrypoint
-
-ENTRYPOINT ["docker-entrypoint"]
-CMD ["yarn", "watch"]
 
 FROM nginx:${NGINX_VERSION}-alpine AS app_nginx
 

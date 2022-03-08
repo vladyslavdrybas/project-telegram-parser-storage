@@ -24,9 +24,3 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
-            LeoTelegramSdk:
-                is_bundle: false
-                type: annotation
-                dir: '%kernel.project_dir%/src/Bundle/LeoTelegramSdk/Entity'
-                prefix: 'App\Bundle\LeoTelegramSdk\Entity'
-                alias: App\Bundle\LeoTelegramSdk
