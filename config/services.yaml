@@ -1,9 +1,10 @@
 parameters:
+    access_tokens: '%env(ACCESS_TOKENS)%'
 
 services:
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        autowire: true
+        autoconfigure: true
 
     App\:
         resource: '../src/'
@@ -12,3 +13,13 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
+
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    event_subscribers:
+        namespace: App\Event\Subscriber\
+        resource: '../src/Event/Subscriber'
+        arguments: [ '@parameter_bag', '@logger' ]
+        tags: [event_subscriber]

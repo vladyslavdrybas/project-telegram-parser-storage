@@ -2,28 +2,28 @@
 
 namespace App\Entity;
 
-use App\Repository\EvilChannelsRepository;
+use App\Repository\EvilChannelRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=EvilChannelsRepository::class)
+ * @ORM\Entity(repositoryClass=EvilChannelRepository::class)
  */
-class EvilChannels extends AbstractEntity
+class EvilChannel extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $platform;
+    protected string $platform;
+
+    /**
+     * @ORM\Column(type="text", unique=true)
+     */
+    protected string $link;
 
     /**
      * @ORM\Column(type="text")
      */
-    private string $link;
-
-    /**
-     * @ORM\Column(type="text")
-     */
-    private string $reason;
+    protected string $reason;
 
     /**
      * @return string

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\UuidV4;
 
 interface EntityInterface
 {
@@ -14,7 +14,7 @@ interface EntityInterface
     public function getEntityClass(): string;
 
     /**
-     * @return \Symfony\Component\Uid\Uuid
+     * @return UuidV4|null
      */
-    public function getId(): Uuid;
+    public function getId(): ?UuidV4;
 }

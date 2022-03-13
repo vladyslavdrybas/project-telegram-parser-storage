@@ -2,28 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Bundle\LeoTelegramSdk\ArgumentResolver;
+namespace App\ArgumentResolver;
 
-use App\Bundle\LeoTelegramSdk\Service\Builder\TelegramRequestBuilder;
-use App\Bundle\LeoTelegramSdk\Service\Builder\MessageBuilderInterface;
-use Psr\Log\LoggerInterface;
+use App\Transfer\TransferInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Normalizer\UidNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use function class_exists;
+use function class_implements;
 
-class TelegramRequestArgumentResolver implements ArgumentValueResolverInterface
+class TransferArgumentResolver implements ArgumentValueResolverInterface
 {
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected LoggerInterface $telegramLogger;
-
-    public function __construct(
-        LoggerInterface $telegramLogger
-    ) {
-        $this->telegramLogger = $telegramLogger;
-    }
-
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata $argument
@@ -31,34 +26,49 @@ class TelegramRequestArgumentResolver implements ArgumentValueResolverInterface
      */
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        if ($argument->getType() === MessageBuilderInterface::class) {
-            $this->telegramLogger->debug(
-                sprintf(
-                    '[%s][%s]',
-                    TelegramRequestArgumentResolver::class,
-                    $argument->getType() ?? 'Unknown'
-                ),
-                [
-                    'request-content' => $request->toArray(),
-                    'request-path-info' => $request->getPathInfo(),
-                    'argument' => $argument->getType(),
-                ]
-            );
-
-            return true;
+        $className = $argument->getType();
+        if ($request->getContentType() != 'json'
+            || !$request->getContent()
+            || !class_exists($className)
+            || !\in_array(
+                TransferInterface::class,
+                class_implements($className),
+                true
+            )
+        ) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter) $argument declaration in the ArgumentValueResolverInterface
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata $argument
      * @return \Generator
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument): \Generator
     {
-        yield new TelegramRequestBuilder($request, $this->telegramLogger);
+        $data = json_decode($request->getContent(), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new BadRequestHttpException('Invalid json body: ' . json_last_error_msg());
+        }
+
+        $className = $argument->getType();
+        $serializer = new Serializer(
+            [
+                new GetSetMethodNormalizer(),
+                new DateTimeNormalizer(),
+                new UidNormalizer()
+            ],
+            [
+                new JsonEncoder()
+            ]
+        );
+
+        /** @var TransferInterface $transfer */
+        yield $serializer->denormalize($data, $className);
     }
 }

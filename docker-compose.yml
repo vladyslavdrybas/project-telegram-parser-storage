@@ -17,6 +17,7 @@ x-php-variables: &php-environment
         - POSTGRES_USER=${POSTGRES_USER:-app}
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-nopassword}
         - DATABASE_URL=${DATABASE_URL:-postgresql://app:nopassword@postgres:5432/app?serverVersion=13&charset=utf8}
+        - ACCESS_TOKENS=${ACCESS_TOKENS:-ACCESS_TOKEN}
 
 services:
     postgres:

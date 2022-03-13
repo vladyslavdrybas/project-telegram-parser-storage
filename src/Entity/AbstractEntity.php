@@ -7,7 +7,6 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\UuidV4;
 
 class AbstractEntity implements EntityInterface
@@ -18,21 +17,20 @@ class AbstractEntity implements EntityInterface
      * @ORM\Id
      * @ORM\Column(name="id", type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
+     * @ORM\CustomIdGenerator(class="App\Generator\UuidGenerator")
      */
-    protected UuidV4 $id;
+    protected ?UuidV4 $id;
 
     public function __construct()
     {
-        $this->id = new UuidV4();
         $this->createdAt = new DateTime();
         $this->updatedAt = new DateTime();
     }
 
     /**
-     * @return UuidV4
+     * @return UuidV4|null
      */
-    public function getId(): UuidV4
+    public function getId(): ?UuidV4
     {
         return $this->id;
     }

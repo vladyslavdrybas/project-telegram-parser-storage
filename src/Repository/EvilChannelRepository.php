@@ -2,15 +2,15 @@
 
 namespace App\Repository;
 
-use App\Entity\EvilChannels;
+use App\Entity\EvilChannel;
 
 /**
- * @method EvilChannels|null find($id, $lockMode = null, $lockVersion = null)
- * @method EvilChannels|null findOneBy(array $criteria, array $orderBy = null)
- * @method EvilChannels[]    findAll()
- * @method EvilChannels[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method EvilChannel|null find($id, $lockMode = null, $lockVersion = null)
+ * @method EvilChannel|null findOneBy(array $criteria, array $orderBy = null)
+ * @method EvilChannel[]    findAll()
+ * @method EvilChannel[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EvilChannelsRepository extends AbstractRepository
+class EvilChannelRepository extends AbstractRepository
 {
-    public const MODEL = EvilChannels::class;
+    public const MODEL = EvilChannel::class;
 }

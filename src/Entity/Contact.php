@@ -14,17 +14,17 @@ class Contact extends AbstractEntity
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $country;
+    protected string $country;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $email;
+    protected string $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $phone;
+    protected string $phone;
 
     /**
      * @return string

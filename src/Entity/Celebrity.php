@@ -13,17 +13,17 @@ class Celebrity extends AbstractEntity
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $title;
+    protected string $title;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $platform;
+    protected string $platform;
 
     /**
      * @ORM\Column(type="text")
      */
-    private string $link;
+    protected string $link;
 
     /**
      * @return string

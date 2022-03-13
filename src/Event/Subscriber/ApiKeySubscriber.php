@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use function trim;
 
-final class AuthenticationEventSubscriber implements EventSubscriberInterface
+final class ApiKeySubscriber implements EventSubscriberInterface
 {
     protected const EXCEPTION_ACCESS_DENIED_MESSAGE = 'Access Denied';
     protected const API_KEY_NAME = 'apikey';
@@ -20,7 +20,7 @@ final class AuthenticationEventSubscriber implements EventSubscriberInterface
     protected array $accessTokens = [];
 
     /**
-     * @param ParameterBagInterface $parameterBag
+     * @param \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag
      */
     public function __construct(ParameterBagInterface $parameterBag)
     {
@@ -48,7 +48,10 @@ final class AuthenticationEventSubscriber implements EventSubscriberInterface
         $this->accessDeniedException();
     }
 
-    protected function accessDeniedException()
+    /**
+     * @return void
+     */
+    protected function accessDeniedException(): void
     {
         throw new AccessDeniedException(self::EXCEPTION_ACCESS_DENIED_MESSAGE);
     }
