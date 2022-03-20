@@ -21,11 +21,8 @@ class EvilChannelRepository extends AbstractRepository
      */
     public function findOneByLink(EvilChannel $entity): ?EvilChannel
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.link = :val')
-            ->setParameter('val', $entity->getLink())
-            ->getQuery()
-            ->getOneOrNullResult()
-            ;
+        return $this->findOneBy([
+            'link' => $entity->getLink()
+        ]);
     }
 }

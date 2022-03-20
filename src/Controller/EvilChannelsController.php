@@ -34,19 +34,19 @@ class EvilChannelsController extends AbstractController
         $repo = $entityManager->getRepository(EvilChannel::class);
         $existed = $repo->findOneByLink($entity);
 
-        if ($existed !== null) {
+        if (!$existed instanceof EvilChannel) {
             $entityManager->persist($entity);
             $entityManager->flush();
 
             return new JsonResponse([
                 'success' => true,
-                'message' => 'new created',
+                'message' => 'new',
             ]);
         }
 
         return new JsonResponse([
             'success' => true,
-            'message' => 'already exist',
+            'message' => 'exist',
         ]);
     }
 }
