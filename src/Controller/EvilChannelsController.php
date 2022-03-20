@@ -28,11 +28,13 @@ class EvilChannelsController extends AbstractController
         $entity = new EvilChannel();
         $entity->setLink($transfer->getLink());
         $entity->setPlatform($transfer->getPlatform());
-        $entity->setReason($transfer->getReason());
+        $entity->setMeta($transfer->getMeta());
+        $entity->setPostId($transfer->getPostId());
+        $entity->setCreatedAt(new \DateTime($transfer->getCreatedAt()));
 
         /** @var \App\Repository\EvilChannelRepository $repo */
         $repo = $entityManager->getRepository(EvilChannel::class);
-        $existed = $repo->findOneByLink($entity);
+        $existed = $repo->findOneByLinkAndId($entity);
 
         if (!$existed instanceof EvilChannel) {
             $entityManager->persist($entity);

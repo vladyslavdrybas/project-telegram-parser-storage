@@ -4,9 +4,15 @@ namespace App\Entity;
 
 use App\Repository\EvilChannelRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=EvilChannelRepository::class)
+ * @UniqueEntity(
+ *     fields={"link", "postId"},
+ *     errorPath="link",
+ *     message="This link is already in use on that post."
+ * )
  */
 class EvilChannel extends AbstractEntity
 {
@@ -16,14 +22,19 @@ class EvilChannel extends AbstractEntity
     protected string $platform;
 
     /**
-     * @ORM\Column(type="text", unique=true)
+     * @ORM\Column(type="text")
      */
     protected string $link;
 
     /**
      * @ORM\Column(type="text")
      */
-    protected string $reason;
+    protected string $postId;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected string $meta;
 
     /**
      * @return string
@@ -60,16 +71,32 @@ class EvilChannel extends AbstractEntity
     /**
      * @return string
      */
-    public function getReason(): string
+    public function getMeta(): string
     {
-        return $this->reason;
+        return $this->meta;
     }
 
     /**
-     * @param string $reason
+     * @param string $meta
      */
-    public function setReason(string $reason): void
+    public function setMeta(string $meta): void
     {
-        $this->reason = $reason;
+        $this->meta = $meta;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostId(): string
+    {
+        return $this->postId;
+    }
+
+    /**
+     * @param string $postId
+     */
+    public function setPostId(string $postId): void
+    {
+        $this->postId = $postId;
     }
 }

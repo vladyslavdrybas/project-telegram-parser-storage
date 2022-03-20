@@ -19,10 +19,11 @@ class EvilChannelRepository extends AbstractRepository
      * @return \App\Entity\EvilChannel|null
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findOneByLink(EvilChannel $entity): ?EvilChannel
+    public function findOneByLinkAndId(EvilChannel $entity): ?EvilChannel
     {
         return $this->findOneBy([
-            'link' => $entity->getLink()
+            'link' => $entity->getLink(),
+            'postId' => $entity->getPostId()
         ]);
     }
 }

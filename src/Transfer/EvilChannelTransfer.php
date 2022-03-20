@@ -8,7 +8,9 @@ class EvilChannelTransfer implements TransferInterface
 {
     protected string $platform;
     protected string $link;
-    protected string $reason;
+    protected string $postId;
+    protected string $meta;
+    protected string $createdAt;
 
     /**
      * @return string
@@ -45,16 +47,48 @@ class EvilChannelTransfer implements TransferInterface
     /**
      * @return string
      */
-    public function getReason(): string
+    public function getPostId(): string
     {
-        return $this->reason;
+        return $this->postId;
     }
 
     /**
-     * @param string $reason
+     * @param string $postId
      */
-    public function setReason(string $reason): void
+    public function setPostId(string $postId): void
     {
-        $this->reason = $reason;
+        $this->postId = $postId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMeta(): string
+    {
+        return $this->meta;
+    }
+
+    /**
+     * @param string $meta
+     */
+    public function setMeta(string $meta): void
+    {
+        $this->meta = $meta;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param string $createdAt
+     */
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
     }
 }
