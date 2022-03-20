@@ -30,8 +30,14 @@ class EvilChannelsController extends AbstractController
         $entity->setPlatform($transfer->getPlatform());
         $entity->setReason($transfer->getReason());
 
-        $entityManager->persist($entity);
-        $entityManager->flush();
+        /** @var \App\Repository\EvilChannelRepository $repo */
+        $repo = $entityManager->getRepository(EvilChannel::class);
+        $existed = $repo->findOneByLink($entity);
+
+        if ($existed !== null) {
+            $entityManager->persist($entity);
+            $entityManager->flush();
+        }
 
         return new JsonResponse([
             'success' => true,

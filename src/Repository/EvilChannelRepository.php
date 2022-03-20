@@ -13,4 +13,19 @@ use App\Entity\EvilChannel;
 class EvilChannelRepository extends AbstractRepository
 {
     public const MODEL = EvilChannel::class;
+
+    /**
+     * @param EvilChannel $entity
+     * @return \App\Entity\EvilChannel|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByLink(EvilChannel $entity): ?EvilChannel
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.link = :val')
+            ->setParameter('val', $entity->getLink())
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
 }

@@ -9,6 +9,9 @@ x-php-variables: &php-environment
         - ACCESS_TOKENS=${ACCESS_TOKENS:-ACCESS_TOKEN}
 
 services:
+  php:
+    expose:
+      - 9000
   nginx:
       ports:
         - ${NGINX_PUBLIC_PORT:-100}:80
