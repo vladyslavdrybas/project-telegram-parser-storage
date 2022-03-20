@@ -37,10 +37,16 @@ class EvilChannelsController extends AbstractController
         if ($existed !== null) {
             $entityManager->persist($entity);
             $entityManager->flush();
+
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'new created',
+            ]);
         }
 
         return new JsonResponse([
             'success' => true,
+            'message' => 'already exist',
         ]);
     }
 }
