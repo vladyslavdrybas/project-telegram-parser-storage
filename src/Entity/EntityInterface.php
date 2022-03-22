@@ -11,7 +11,7 @@ interface EntityInterface
     /**
      * @return string
      */
-    public function getEntityClass(): string;
+    public function getType(): string;
 
     /**
      * @return UuidV4|null

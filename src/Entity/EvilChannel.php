@@ -8,6 +8,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=EvilChannelRepository::class)
+ * @ORM\Table(
+ *      name="evil_channel",
+ *      uniqueConstraints={@ORM\UniqueConstraint(columns={"link", "post_id"})}
+ * )
  * @UniqueEntity(
  *     fields={"link", "postId"},
  *     errorPath="link",
@@ -17,22 +21,22 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class EvilChannel extends AbstractEntity
 {
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="platform", type="string", length=255)
      */
     protected string $platform;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="link", type="text")
      */
     protected string $link;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="post_id", type="text")
      */
     protected string $postId;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="meta", type="text")
      */
     protected string $meta;
 

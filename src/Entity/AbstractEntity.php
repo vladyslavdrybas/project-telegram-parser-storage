@@ -8,6 +8,8 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\UuidV4;
+use function array_pop;
+use function explode;
 
 class AbstractEntity implements EntityInterface
 {
@@ -46,9 +48,11 @@ class AbstractEntity implements EntityInterface
     /**
      * @return string
      */
-    public function getEntityClass(): string
+    public function getType(): string
     {
-        return static::class;
+        $namespace = explode('\\', static::class);
+
+        return array_pop($namespace);
     }
 
     /**

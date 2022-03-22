@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Normalizer\UidNormalizer;
@@ -59,7 +60,7 @@ class TransferArgumentResolver implements ArgumentValueResolverInterface
         $className = $argument->getType();
         $serializer = new Serializer(
             [
-                new GetSetMethodNormalizer(),
+                new GetSetMethodNormalizer(null, new CamelCaseToSnakeCaseNameConverter()),
                 new DateTimeNormalizer(),
                 new UidNormalizer()
             ],

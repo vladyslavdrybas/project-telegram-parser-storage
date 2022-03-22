@@ -15,7 +15,7 @@ class JsonErrorController
         return new JsonResponse([
                 'success' => false,
                 'message' => $exception->getMessage(),
-                'code' => $exception->getPrevious()->getCode() ?? 0
+                'code' => $exception->getPrevious() !== null ? $exception->getPrevious()->getCode() : 0,
             ]
         );
     }
