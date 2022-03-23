@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use function dump;
 
 
 class PostController extends AbstractController
@@ -30,8 +29,30 @@ class PostController extends AbstractController
     #[Route("/post", name: "post_add", methods: ["POST"])]
     public function add(PostTransfer $transfer): JsonResponse
     {
+        /** @var \App\Repository\PostRepository $repo */
+        $repo = $this->em->getRepository(Post::class);
         $entity = $this->converter->convertTransfer($transfer);
-        $this->em->getRepository(Post::class)->add($entity);
+        $repo->add($entity);
+
+        return $this->json($entity);
+    }
+
+    #[Route("/post/first/{channel}", name: "post_get_first", methods: ["GET"])]
+    public function getFirst(string $channel): JsonResponse
+    {
+        /** @var \App\Repository\PostRepository $repo */
+        $repo = $this->em->getRepository(Post::class);
+        $entity = $repo->getFirstPostInChannel($channel);
+
+        return $this->json($entity);
+    }
+
+    #[Route("/post/last/{channel}", name: "post_get_last", methods: ["GET"])]
+    public function getLast(string $channel): JsonResponse
+    {
+        /** @var \App\Repository\PostRepository $repo */
+        $repo = $this->em->getRepository(Post::class);
+        $entity = $repo->getLastPostInChannel($channel);
 
         return $this->json($entity);
     }

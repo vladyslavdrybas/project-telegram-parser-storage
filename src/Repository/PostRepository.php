@@ -13,4 +13,36 @@ use App\Entity\Post;
 class PostRepository extends AbstractRepository
 {
     public const MODEL = Post::class;
+
+    /**
+     * @param string $channel
+     * @return \App\Entity\Post|null
+     */
+    public function getFirstPostInChannel(string $channel): ?Post
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.channel = :val')
+            ->setParameter('val', $channel)
+            ->orderBy('t.postNumber', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * @param string $channel
+     * @return \App\Entity\Post|null
+     */
+    public function getLastPostInChannel(string $channel): ?Post
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.channel = :val')
+            ->setParameter('val', $channel)
+            ->orderBy('t.postNumber', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
