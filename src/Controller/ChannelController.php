@@ -36,13 +36,23 @@ class ChannelController extends AbstractController
         return $this->json($entity);
     }
 
-    #[Route("/channel/{title}", name: "channel_get", methods: ["GET"])]
+    #[Route("/channel/find/{title}", name: "channel_get", methods: ["GET"])]
     public function get(string $title): JsonResponse
     {
         /** @var \App\Repository\ChannelRepository $repo */
         $repo = $this->em->getRepository(Channel::class);
         $entity = $repo->findOneBy(['title' => $title]);
 
-        return $this->json($entity);
+        return $this->json($entity ?? []);
+    }
+
+    #[Route("/channel/list", name: "channel_list", methods: ["GET"])]
+    public function list(): JsonResponse
+    {
+        /** @var \App\Repository\ChannelRepository $repo */
+        $repo = $this->em->getRepository(Channel::class);
+        $entities = $repo->findBy(['active' => true]);
+
+        return $this->json($entities ?? []);
     }
 }

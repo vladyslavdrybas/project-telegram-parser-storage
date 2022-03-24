@@ -44,7 +44,7 @@ class PostController extends AbstractController
         $repo = $this->em->getRepository(Post::class);
         $entity = $repo->getFirstPostInChannel($channel);
 
-        return $this->json($entity);
+        return $this->json($entity ?? []);
     }
 
     #[Route("/post/last/{channel}", name: "post_get_last", methods: ["GET"])]
@@ -54,6 +54,6 @@ class PostController extends AbstractController
         $repo = $this->em->getRepository(Post::class);
         $entity = $repo->getLastPostInChannel($channel);
 
-        return $this->json($entity);
+        return $this->json($entity ?? []);
     }
 }
