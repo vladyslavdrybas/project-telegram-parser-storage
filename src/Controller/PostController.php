@@ -27,7 +27,7 @@ class PostController extends AbstractController
     }
 
     #[Route("/post", name: "post_add", methods: ["POST"])]
-    public function add(PostTransfer $transfer): JsonResponse
+    public function addPost(PostTransfer $transfer): JsonResponse
     {
         /** @var \App\Repository\PostRepository $repo */
         $repo = $this->em->getRepository(Post::class);
