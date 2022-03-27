@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\TransferEntityConverter;
 
 use App\Entity\Channel;
-use App\Transfer\ChannelTransfer;
+use App\Transfer\Request\ChannelTransfer;
 
 class ChannelConverter extends AbstractConverter
 {

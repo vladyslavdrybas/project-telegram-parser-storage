@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ChannelRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,6 +31,23 @@ class Channel extends AbstractEntity
      * @ORM\Column(name="active", type="boolean", options={"default":true})
      */
     protected bool $active = true;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Miner", mappedBy="channels")
+     */
+    protected Collection $miners;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="channel")
+     */
+    protected Collection $posts;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->miners = new ArrayCollection();
+        $this->posts = new ArrayCollection();
+    }
 
     /**
      * @return string
@@ -92,5 +111,58 @@ class Channel extends AbstractEntity
     public function setActive(bool $active): void
     {
         $this->active = $active;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMiners(): Collection
+    {
+        return $this->miners;
+    }
+
+    /**
+     * @param \App\Entity\Miner $miner
+     */
+    public function addMiner(Miner $miner): void
+    {
+        if (!$this->miners->contains($miner)) {
+            $this->miners->add($miner);
+            $miner->addChannel($this);
+        }
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\Collection $miners
+     */
+    public function setMiners(Collection $miners): void
+    {
+        $this->miners = $miners;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
+     */
+    public function getPosts(): ArrayCollection|Collection
+    {
+        return $this->posts;
+    }
+
+    /**
+     * @param \App\Entity\Post $post
+     */
+    public function addPost(Post $post): void
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts->add($post);
+        }
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection $posts
+     */
+    public function setPosts(ArrayCollection|Collection $posts): void
+    {
+        $this->posts = $posts;
     }
 }

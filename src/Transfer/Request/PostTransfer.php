@@ -2,28 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Transfer;
+namespace App\Transfer\Request;
 
-class PostTransfer implements TransferInterface
+use App\Transfer\TransferInterface;
+
+class PostTransfer implements TransferInterface, TransferRequestInterface
 {
-    protected string $channel;
+    protected string $channelTitle;
     protected int $postNumber;
     protected string $meta;
 
     /**
      * @return string
      */
-    public function getChannel(): string
+    public function getChannelTitle(): string
     {
-        return $this->channel;
+        return $this->channelTitle;
     }
 
     /**
-     * @param string $channel
+     * @param string $channelTitle
      */
-    public function setChannel(string $channel): void
+    public function setChannelTitle(string $channelTitle): void
     {
-        $this->channel = $channel;
+        $this->channelTitle = $channelTitle;
     }
 
     /**

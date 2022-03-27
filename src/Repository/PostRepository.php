@@ -15,14 +15,14 @@ class PostRepository extends AbstractRepository
     public const MODEL = Post::class;
 
     /**
-     * @param string $channel
+     * @param string $channelTitle
      * @return \App\Entity\Post|null
      */
-    public function getFirstPostInChannel(string $channel): ?Post
+    public function getFirstPostInChannel(string $channelTitle): ?Post
     {
         return $this->createQueryBuilder('t')
-            ->where('t.channel = :val')
-            ->setParameter('val', $channel)
+            ->where('t.channelTitle = :val')
+            ->setParameter('val', $channelTitle)
             ->orderBy('t.postNumber', 'ASC')
             ->setMaxResults(1)
             ->getQuery()
@@ -37,7 +37,7 @@ class PostRepository extends AbstractRepository
     public function getLastPostInChannel(string $channel): ?Post
     {
         return $this->createQueryBuilder('t')
-            ->where('t.channel = :val')
+            ->where('t.channelTitle = :val')
             ->setParameter('val', $channel)
             ->orderBy('t.postNumber', 'DESC')
             ->setMaxResults(1)

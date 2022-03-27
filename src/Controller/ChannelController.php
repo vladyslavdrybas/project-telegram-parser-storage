@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Channel;
-use App\Transfer\ChannelTransfer;
+use App\Transfer\Request\ChannelTransfer;
 use App\TransferEntityConverter\ChannelConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

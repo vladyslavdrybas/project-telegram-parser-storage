@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\TransferEntityConverter;
 
 use App\Entity\Post;
-use App\Transfer\PostTransfer;
+use App\Transfer\Request\PostTransfer;
 
 class PostConverter extends AbstractConverter
 {

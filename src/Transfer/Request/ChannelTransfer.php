@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Transfer;
+namespace App\Transfer\Request;
 
-class ChannelTransfer implements TransferInterface
+use App\Transfer\TransferInterface;
+
+class ChannelTransfer implements TransferInterface, TransferRequestInterface
 {
     protected string $title;
     protected string $mainLink;
