@@ -42,6 +42,12 @@ class Channel extends AbstractEntity
      */
     protected Collection $posts;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Source", inversedBy="channels")
+     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
+     */
+    protected Source $source;
+
     public function __construct()
     {
         parent::__construct();
@@ -164,5 +170,21 @@ class Channel extends AbstractEntity
     public function setPosts(ArrayCollection|Collection $posts): void
     {
         $this->posts = $posts;
+    }
+
+    /**
+     * @return \App\Entity\Source
+     */
+    public function getSource(): Source
+    {
+        return $this->source;
+    }
+
+    /**
+     * @param \App\Entity\Source $source
+     */
+    public function setSource(Source $source): void
+    {
+        $this->source = $source;
     }
 }
