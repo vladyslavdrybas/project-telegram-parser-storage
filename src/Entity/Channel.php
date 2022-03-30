@@ -43,6 +43,11 @@ class Channel extends AbstractEntity
     protected Collection $posts;
 
     /**
+     * @ORM\OneToMany(targetEntity="ChannelCommunitySupport", mappedBy="channel")
+     */
+    protected Collection $channelCommunitySupports;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Source", inversedBy="channels")
      * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
      */
@@ -53,6 +58,7 @@ class Channel extends AbstractEntity
         parent::__construct();
         $this->miners = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->channelCommunitySupports = new ArrayCollection();
     }
 
     /**
@@ -186,5 +192,21 @@ class Channel extends AbstractEntity
     public function setSource(Source $source): void
     {
         $this->source = $source;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
+     */
+    public function getChannelCommunitySupports(): ArrayCollection|Collection
+    {
+        return $this->channelCommunitySupports;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection $channelCommunitySupports
+     */
+    public function setChannelCommunitySupports(ArrayCollection|Collection $channelCommunitySupports): void
+    {
+        $this->channelCommunitySupports = $channelCommunitySupports;
     }
 }
