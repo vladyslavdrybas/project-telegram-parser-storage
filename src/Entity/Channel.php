@@ -130,7 +130,7 @@ class Channel extends AbstractEntity
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|\App\Entity\Miner[]
      */
     public function getMiners(): Collection
     {

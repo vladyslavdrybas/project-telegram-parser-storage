@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Channel;
+use App\Entity\Miner;
 use App\Transfer\Request\ChannelTransfer;
 use App\TransferEntityConverter\ChannelConverter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -53,5 +54,27 @@ class ChannelController extends AbstractController
         $entities = $repo->findBy(['active' => true]);
 
         return $this->jsonList($entities);
+    }
+
+    #[Route("/channel/miners", name: "channel_miners_get", methods: ["GET"])]
+    public function getChannelMiners(): JsonResponse
+    {
+        /** @var \App\Repository\ChannelRepository $repo */
+        $repo = $this->em->getRepository(Channel::class);
+        $channels = $repo->findBy(['active' => true]);
+
+        $list = [];
+        foreach ($channels as $channel) {
+            foreach ($channel->getMiners() as $miner) {
+                $list[] = [
+                    'minerTitle' => $miner->getTitle(),
+                    'channelTitle' => $channel->getTitle(),
+                    'miner' => $miner->getId(),
+                    'channel' => $channel->getId(),
+                ];
+            }
+        }
+
+        return $this->jsonList($list);
     }
 }
