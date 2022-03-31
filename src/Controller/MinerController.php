@@ -106,16 +106,11 @@ class MinerController extends AbstractController
 
         $this->em->flush();
 
-        $list = [];
-        foreach ($miner->getPostQueue() as $post) {
-            $list[] = [
-                'minerTitle' => $miner->getTitle(),
-                'miner' => $miner->getId(),
-                'post' => $post->getId(),
-            ];
-        }
-
-        return $this->jsonList($list);
+        return $this->jsonList([
+            'minerTitle' => $miner->getTitle(),
+            'miner' => $miner->getId(),
+            'post' => $post->getId(),
+        ]);
     }
 
     #[Route("/miner/post/archive", name: "miner_post_archive", methods: ["POST"])]
@@ -154,16 +149,11 @@ class MinerController extends AbstractController
             $this->em->flush();
         }
 
-        $list = [];
-        foreach ($miner->getPostArchive() as $post) {
-            $list[] = [
-                'minerTitle' => $miner->getTitle(),
-                'miner' => $miner->getId(),
-                'post' => $post->getId(),
-            ];
-        }
-
-        return $this->jsonList($list);
+        return $this->jsonList([
+            'minerTitle' => $miner->getTitle(),
+            'miner' => $miner->getId(),
+            'post' => $post->getId(),
+        ]);
     }
 
     protected function tmpFullPostChannel(Post $post): void
