@@ -15,6 +15,7 @@ use App\TransferEntityConverter\MinerConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use function array_diff;
 
 class MinerController extends AbstractController
 {
@@ -154,6 +155,43 @@ class MinerController extends AbstractController
             'miner' => $miner->getId(),
             'post' => $post->getId(),
         ]);
+    }
+
+    #[Route("/miner/channel/posts/connect", name: "miner_channel_posts_connect", methods: ["GET"])]
+    public function minerChannelPostConnections(): JsonResponse
+    {
+        /** @var \App\Repository\ChannelRepository $repo */
+        $repo = $this->em->getRepository(Channel::class);
+        $channels = $repo->findBy(['active' => true]);
+
+        $miners = [];
+        foreach ($channels as $channel) {
+            $posts = $channel->getPosts()->toArray();
+            foreach ($channel->getMiners() as $miner) {
+                /** @var array|Post[] $postsQueue */
+                $postsQueue = array_udiff(
+                    $posts,
+                    $miner->getPostArchive()->toArray(),
+                    $miner->getPostQueue()->toArray(),
+                    function (Post $a, Post $b) {
+                        return strcmp(spl_object_hash($a), spl_object_hash($b));
+                    }
+                );
+
+                foreach ($postsQueue as $post) {
+                    $miners[] = [
+                        'miner' => $miner->getId(),
+                        'minerTitle' => $miner->getTitle(),
+                        'channel' => $channel->getId(),
+                        'channelTitle' => $channel->getTitle(),
+                        'post' => $post->getId(),
+                        'postNumber' => $post->getPostNumber(),
+                    ];
+                }
+            }
+        }
+
+        return $this->jsonList($miners);
     }
 
     protected function tmpFullPostChannel(Post $post): void
