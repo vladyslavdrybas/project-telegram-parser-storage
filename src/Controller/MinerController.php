@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use function array_diff;
+use function dump;
 
 class MinerController extends AbstractController
 {
@@ -192,6 +193,24 @@ class MinerController extends AbstractController
         }
 
         return $this->jsonList($miners);
+    }
+
+    #[Route("/miner/queue/{minerTitle}", name: "miner_queue_get", methods: ["GET"])]
+    public function minerMine(string $minerTitle): JsonResponse
+    {
+        /** @var \App\Repository\MinerRepository $repo */
+        $repo = $this->em->getRepository(Miner::class);
+        $miner = $repo->findOneBy(['title' => $minerTitle]);
+
+        $queue = [];
+        if ($miner instanceof Miner) {
+            $queue = $miner->getPostQueue()->toArray();
+        }
+
+        return $this->jsonList([
+            'miner' => $miner,
+            'posts' => $queue,
+        ]);
     }
 
     protected function tmpFullPostChannel(Post $post): void
