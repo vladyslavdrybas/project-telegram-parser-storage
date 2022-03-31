@@ -37,10 +37,10 @@ class Channel extends AbstractEntity
      */
     protected string $messageLink;
     /**
-     * @ORM\Column(name="active", type="boolean", options={"default":true})
+     * @ORM\Column(name="active", type="boolean", options={"default":false})
      * @Groups({"show_channel", "list"})
      */
-    protected bool $active = true;
+    protected bool $active = false;
 
     /**
      * @ORM\ManyToMany(targetEntity="Miner", mappedBy="channels")
