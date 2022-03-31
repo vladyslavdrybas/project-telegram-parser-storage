@@ -5,29 +5,16 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Channel;
-use App\Entity\EntityInterface;
 use App\Entity\Post;
 use App\Transfer\Request\PostTransfer;
 use App\TransferEntityConverter\PostConverter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 
 class PostController extends AbstractController
 {
-    protected const IGNORED_ATTRIBUTES = [
-        'posts',
-        'miners',
-        'minerQueue',
-        'minerArchive',
-        '__initializer__',
-        '__cloner__',
-        '__isInitialized__',
-    ];
-
     protected EntityManagerInterface $em;
     protected PostConverter $converter;
 
@@ -51,18 +38,13 @@ class PostController extends AbstractController
 
         $channel = $repoChannel->findOneBy(['title' => $transfer->getChannelTitle()]);
         if (!$channel instanceof Channel) {
-            return $this->json([]);
+            return $this->jsonEntity(null);
         }
 
         $post->setChannel($channel);
         $repoPost->add($post);
 
-        return $this->json($post, 200, [], [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (EntityInterface $object, $format, $context) {
-                return $object->getId();
-            },
-            AbstractNormalizer::IGNORED_ATTRIBUTES => static::IGNORED_ATTRIBUTES,
-        ]);
+        return $this->jsonEntity($post);
     }
 
     #[Route("/post/first/{channelTitle}", name: "post_get_first", methods: ["GET"])]
@@ -74,12 +56,7 @@ class PostController extends AbstractController
 
         $this->tmpFullPostChannel($post);
 
-        return $this->json($post, 200, [], [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (EntityInterface $object, $format, $context) {
-                return $object->getId();
-            },
-            AbstractNormalizer::IGNORED_ATTRIBUTES => static::IGNORED_ATTRIBUTES,
-        ]);
+        return $this->jsonEntity($post);
     }
 
     #[Route("/post/last/{channelTitle}", name: "post_get_last", methods: ["GET"])]
@@ -91,12 +68,7 @@ class PostController extends AbstractController
 
         $this->tmpFullPostChannel($post);
 
-        return $this->json($post, 200, [], [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (EntityInterface $object, $format, $context) {
-                return $object->getId();
-            },
-            AbstractNormalizer::IGNORED_ATTRIBUTES => static::IGNORED_ATTRIBUTES,
-        ]);
+        return $this->jsonEntity($post);
     }
 
     protected function tmpFullPostChannel(Post $post): void

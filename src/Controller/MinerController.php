@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Channel;
-use App\Entity\EntityInterface;
 use App\Entity\Miner;
 use App\Entity\Post;
 use App\Transfer\Request\MinerChannelConnectTransfer;
@@ -14,25 +13,11 @@ use App\Transfer\Request\MinerPostConnectTransfer;
 use App\Transfer\Request\MinerTransfer;
 use App\TransferEntityConverter\MinerConverter;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class MinerController extends AbstractController
 {
-    protected const IGNORED_ATTRIBUTES = [
-        'posts',
-        'miners',
-        'minerQueue',
-        'minerArchive',
-        'postQueue',
-        'postArchive',
-        '__initializer__',
-        '__cloner__',
-        '__isInitialized__',
-    ];
-
     protected EntityManagerInterface $em;
     protected MinerConverter $converter;
 
@@ -52,7 +37,7 @@ class MinerController extends AbstractController
         $miner = $this->converter->convertTransfer($transfer);
         $repo->add($miner);
 
-        return $this->json($miner);
+        return $this->jsonEntity($miner);
     }
 
     #[Route("/miner/{title}", name: "miner_get", methods: ["GET"])]
@@ -62,12 +47,7 @@ class MinerController extends AbstractController
         $repo = $this->em->getRepository(Miner::class);
         $miner = $repo->findOneBy(['title' => $title]);
 
-        return $this->json($miner, 200, [], [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (EntityInterface $object, $format, $context) {
-                return $object->getId();
-            },
-            AbstractNormalizer::IGNORED_ATTRIBUTES => static::IGNORED_ATTRIBUTES,
-        ]);
+        return $this->jsonEntity($miner);
     }
 
     #[Route("/miner/channel/connect", name: "miner_channel_connect", methods: ["POST"])]
@@ -80,24 +60,19 @@ class MinerController extends AbstractController
 
         $miner = $repoMiner->findOneBy(['title' => $transfer->getMinerTitle()]);
         if (!$miner instanceof Miner) {
-            return $this->json([]);
+            return $this->jsonEntity(null);
         }
 
         $channel = $repoChannel->findOneBy(['title' => $transfer->getChannelTitle()]);
         if (!$channel instanceof Channel) {
-            return $this->json([]);
+            return $this->jsonEntity(null);
         }
 
         $miner->addChannel($channel);
 
         $this->em->flush();
 
-        return $this->json($miner, 200, [], [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (EntityInterface $object, $format, $context) {
-                return $object->getId();
-            },
-            AbstractNormalizer::IGNORED_ATTRIBUTES => static::IGNORED_ATTRIBUTES,
-        ]);
+        return $this->jsonEntity($miner);
     }
 
     #[Route("/miner/post/connect", name: "miner_post_connect", methods: ["POST"])]
@@ -110,7 +85,7 @@ class MinerController extends AbstractController
 
         $miner = $repoMiner->findOneBy(['title' => $transfer->getMinerTitle()]);
         if (!$miner instanceof Miner) {
-            return $this->json([]);
+            return $this->jsonEntity(null);
         }
 
         $post = $repoPost->findOneBy([
@@ -118,13 +93,13 @@ class MinerController extends AbstractController
             'postNumber' => $transfer->getPostNumber(),
         ]);
         if (!$post instanceof Post) {
-            return $this->json([]);
+            return $this->jsonEntity(null);
         }
 
         $this->tmpFullPostChannel($post);
 
         if (!$miner->getChannels()->contains($post->getChannel())) {
-            return $this->json([]);
+            return $this->jsonEntity(null);
         }
 
         $miner->addPostQueue($post);
@@ -140,7 +115,7 @@ class MinerController extends AbstractController
             ];
         }
 
-        return $this->json($list);
+        return $this->jsonList($list);
     }
 
     #[Route("/miner/post/archive", name: "miner_post_archive", methods: ["POST"])]
@@ -153,7 +128,7 @@ class MinerController extends AbstractController
 
         $miner = $repoMiner->findOneBy(['title' => $transfer->getMinerTitle()]);
         if (!$miner instanceof Miner) {
-            return $this->json([]);
+            return $this->jsonEntity(null);
         }
 
         $post = $repoPost->findOneBy([
@@ -161,12 +136,12 @@ class MinerController extends AbstractController
             'postNumber' => $transfer->getPostNumber(),
         ]);
         if (!$post instanceof Post) {
-            return $this->json([]);
+            return $this->jsonEntity(null);
         }
 
         $this->tmpFullPostChannel($post);
         if (!$miner->getChannels()->contains($post->getChannel())) {
-            return $this->json([]);
+            return $this->jsonEntity(null);
         }
 
         if ($miner->getPostQueue()->contains($post)) {
@@ -188,7 +163,7 @@ class MinerController extends AbstractController
             ];
         }
 
-        return $this->json($list);
+        return $this->jsonList($list);
     }
 
     protected function tmpFullPostChannel(Post $post): void

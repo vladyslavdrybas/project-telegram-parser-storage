@@ -6,29 +6,39 @@ use App\Repository\ChannelRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ChannelRepository::class)
- * @ORM\Table(
- *      name="channel",
- * )
+ * @ORM\Table(name="channel")
  */
 class Channel extends AbstractEntity
 {
     /**
+     * @ORM\ManyToOne(targetEntity="Source", inversedBy="channels")
+     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
+     * @Groups({"show_channel", "list"})
+     */
+    protected Source $source;
+
+    /**
      * @ORM\Column(name="title", type="text", length=255, unique=true)
+     * @Groups({"show_channel", "list"})
      */
     protected string $title;
     /**
      * @ORM\Column(name="main_link", type="text")
+     * @Groups({"show_channel", "list"})
      */
     protected string $mainLink;
     /**
      * @ORM\Column(name="message_link", type="text")
+     * @Groups({"show_channel", "list"})
      */
     protected string $messageLink;
     /**
      * @ORM\Column(name="active", type="boolean", options={"default":true})
+     * @Groups({"show_channel", "list"})
      */
     protected bool $active = true;
 
@@ -46,12 +56,6 @@ class Channel extends AbstractEntity
      * @ORM\OneToMany(targetEntity="ChannelCommunitySupport", mappedBy="channel")
      */
     protected Collection $channelCommunitySupports;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Source", inversedBy="channels")
-     * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)
-     */
-    protected Source $source;
 
     public function __construct()
     {

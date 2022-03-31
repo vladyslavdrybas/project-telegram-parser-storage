@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Entity\EvilChannel;
 use App\Transfer\EvilChannelTransfer;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 

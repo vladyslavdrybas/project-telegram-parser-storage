@@ -8,6 +8,7 @@ use App\Repository\CommunityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CommunityRepository::class)
@@ -17,6 +18,7 @@ class Community extends AbstractEntity
 {
     /**
      * @ORM\Column(name="title", type="text", length=255, unique=true)
+     * @Groups({"show_community", "list"})
      */
     protected string $title;
 

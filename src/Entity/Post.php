@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -25,21 +26,25 @@ class Post extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="Channel", inversedBy="posts")
      * @ORM\JoinColumn(name="channel_id", referencedColumnName="id", nullable=true)
+     * @Groups({"show_post", "list"})
      */
     protected ?Channel $channel = null;
 
     /**
      * @ORM\Column(name="channel", type="string", length=255)
+     * @Groups({"show_post", "list"})
      */
     protected string $channelTitle;
 
     /**
      * @ORM\Column(name="post_number", type="integer")
+     * @Groups({"show_post", "list"})
      */
     protected int $postNumber;
 
     /**
      * @ORM\Column(name="meta", type="text")
+     * @Groups({"show_post", "list"})
      */
     protected string $meta;
 

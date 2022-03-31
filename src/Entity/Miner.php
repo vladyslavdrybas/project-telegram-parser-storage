@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=MinerRepository::class)
@@ -16,6 +17,7 @@ class Miner extends AbstractEntity
 {
     /**
      * @ORM\Column(name="title", type="text", length=255, unique=true)
+     * @Groups({"show_miner", "list"})
      */
     protected string $title;
 
